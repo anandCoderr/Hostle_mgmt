@@ -1,13 +1,14 @@
 import jwt from "jsonwebtoken";
+import "dotenv/config";
 
-const jwtConvert = (data = undefined, expIn = "1h") => {
-  return jwt.sign(
-    {
-      data: data,
-    },
-    process.env.JWT_SECREATE_KEY,
-    { expiresIn: expIn },
-  );
+export const jwtConvert = (payload, expiresIn) => {
+  try {
+    const token = jwt.sign(payload, process.env.JWT_SECRET_KEY, { expiresIn });
+    return token;
+  } catch (error) {
+    console.error("Error creating JWT:", error);
+    return null;
+  }
 };
 
 // ----------------jwt verify

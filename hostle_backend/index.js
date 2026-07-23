@@ -1,16 +1,19 @@
-import { serverVar } from "./common/static/serverStatic";
-import connectDb from "./config/db";
 import express from "express";
-import 'dotenv/config'
-
+import connectDb from "./config/db.js";
+import "dotenv/config";
+import router from "./routes/index.js";
 
 const app = express();
 
 app.use(express.json());
 
+app.use(router);
+
 connectDb();
 
 // ----------------------Port code where it will listen
-app.listen(serverVar.port_num, () => {
-  console.log(`server is running on port number ${serverVar.port_num}`);
+const post_num = process.env.PORT_NUMBER;
+
+app.listen(post_num, () => {
+  console.log(`server is running on port number ${post_num}`);
 });

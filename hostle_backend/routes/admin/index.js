@@ -1,6 +1,6 @@
 import { Router } from "express";
 
-import inviteRouter from "./invite.user.route";
+import inviteRouter from "./invite.user.route.js";
 
 const adminRoutes = Router();
 

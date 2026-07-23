@@ -1,10 +1,14 @@
-import { errorHelper } from "../../common/helper/globalHelper";
-import { nodeMailerOtpHelper } from "../../common/helper/nodeMailer";
-import { errorStaticVar } from "../../common/static/errorStatis";
-import { messageStatic } from "../../common/static/messageStatic";
-import { statusVar } from "../../common/static/statusCodeVar";
-import { userMessage } from "../../common/static/userStatic";
-import Inviteuser from "../../modal/adminModal/inviteModal";
+import {
+  errorHelper,
+  successHelper,
+} from "../../common/helper/globalHelper.js";
+import { nodeMailerOtpHelper } from "../../common/helper/nodeMailer.js";
+import { jwtConvert } from "../../common/helper/jwtHelper.js"; // Assuming this is the correct path
+import { errorStaticVar } from "../../common/static/errorStatis.js";
+import { messageStatic } from "../../common/static/messageStatic.js";
+import { statusVar } from "../../common/static/statusCodeVar.js";
+import { userMessage } from "../../common/static/userStatic.js";
+import Inviteuser from "../../modal/adminModal/inviteModal.js";
 
 export const sendInviteController = async (req, res) => {
   try {
@@ -30,11 +34,10 @@ export const sendInviteController = async (req, res) => {
     const mailerRes = await nodeMailerOtpHelper(
       email,
       messageStatic?.AUTH_LINK_TITLE,
-
-      <p>
-        Please click this link to register hostle: <br />
-        `http://localhost:3000/hostle-mgmt/register?token={token}`
-      </p>,
+      `<p>
+        Please click this link to register for hostle: <br />
+        <a href="http://localhost:3000/hostle-mgmt/register?token=${token}">Register Here</a>
+      </p>`,
     );
 
     if (!mailerRes) {
@@ -42,6 +45,22 @@ export const sendInviteController = async (req, res) => {
         message: errorStaticVar?.NODE_MAILER_ERROR,
       });
     }
+
+    const inviteUser = Inviteuser({
+      email,
+      token,
+      // invitedBy: req.user._id,
+      expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000),
+    });
+
+    const inviteUserRes = await inviteUser.save();
+
+    if (!inviteUserRes) {
+      console.log("invited User's data can't be saved");
+      return;
+    }
+
+    return successHelper(res, messageStatic.EMAIL_SENT_SUCCESS);
   } catch (error) {
     console.log(error);
   }

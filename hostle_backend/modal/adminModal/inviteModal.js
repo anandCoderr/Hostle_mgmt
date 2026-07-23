@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const inviteModal = new mongoose.schema(
+const inviteModal = new mongoose.Schema(
   {
     email: {
       type: String,
@@ -16,7 +16,7 @@ const inviteModal = new mongoose.schema(
     },
 
     invitedBy: {
-      type: Schema.Types.ObjectId,
+      type: mongoose.Schema.Types.ObjectId,
       ref: "Users",
       required: true,
     },
