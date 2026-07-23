@@ -18,7 +18,7 @@ const inviteModal = new mongoose.Schema(
     invitedBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Users",
-      required: true,
+      // required: true,
     },
 
     expiresAt: {

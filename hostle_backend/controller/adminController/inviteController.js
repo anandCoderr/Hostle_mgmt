@@ -25,6 +25,8 @@ export const sendInviteController = async (req, res) => {
 
     const token = jwtConvert({ email }, "24h");
 
+    console.log("token:----------->", token);
+
     if (!token) {
       return errorHelper(res, {
         message: errorStaticVar?.JWT_CREATION_ERR,
@@ -36,7 +38,9 @@ export const sendInviteController = async (req, res) => {
       messageStatic?.AUTH_LINK_TITLE,
       `<p>
         Please click this link to register for hostle: <br />
-        <a href="http://localhost:3000/hostle-mgmt/register?token=${token}">Register Here</a>
+        <a href="http://localhost:3000/hostle-mgmt/register?token=${token}">
+          Register Here
+        </a>
       </p>`,
     );
 

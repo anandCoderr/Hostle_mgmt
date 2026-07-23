@@ -3,7 +3,9 @@ import "dotenv/config";
 
 export const jwtConvert = (payload, expiresIn) => {
   try {
-    const token = jwt.sign(payload, process.env.JWT_SECRET_KEY, { expiresIn });
+    const token = jwt.sign({ data: payload }, process.env.JWT_SECREATE_KEY, {
+      expiresIn,
+    });
     return token;
   } catch (error) {
     console.error("Error creating JWT:", error);
