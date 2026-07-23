@@ -2,7 +2,7 @@ import nodemailer from "nodemailer";
 
 // ----nodemailer otp verification code
 
-const nodeMailerOtpHelper = async (to, sub, message) => {
+export const nodeMailerOtpHelper = async (to, sub, message) => {
   try {
     const transporter = nodemailer.createTransport({
       host: "smtp.gmail.com",
