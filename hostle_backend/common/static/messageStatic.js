@@ -7,4 +7,7 @@ export const messageStatic = {
   USER_AVAILABLE: "User is alredy available",
   USER_AVAILABLE_AND_IN_USE: "Same user can't take room again.",
   USER_ADDED_SUCCESS: "User added successfully",
+
+  // ----------SERVER ERROR
+  SERVER_ERROR: "Server error",
 };

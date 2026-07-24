@@ -12,6 +12,19 @@ export const registerApi = async (req, res) => {
     const { name, email, room, phone, password } = req.body;
     console.log("req.user:---------->", req.user);
 
+    // ---------------ALREADY AVAILABLE
+
+    const findUserRes = await userSchema.findOne({ email: email });
+
+    if (findUserRes) {
+      return errorHelper(res, {
+        status: statusVar.alreadyAvailable,
+        message: messageStatic.USER_AVAILABLE,
+      });
+    }
+
+    // -------------invite user check
+
     const inviteUserRes = await Inviteuser.findOne({ email: email });
 
     if (!inviteUserRes) {
@@ -44,7 +57,7 @@ export const registerApi = async (req, res) => {
     }
 
     const inviteUserResVar = await Inviteuser.updateOne(
-      { email, _id: inviteUserResVar._id },
+      { email, _id: inviteUserRes._id },
       {
         $set: {
           isUsed: true,
@@ -66,5 +79,9 @@ export const registerApi = async (req, res) => {
     );
   } catch (error) {
     console.log("error:------->", error);
+    return errorHelper(res, {
+      status: statusVar.SERVER_ERROR,
+      message: messageStatic.SERVER_ERROR,
+    });
   }
 };
