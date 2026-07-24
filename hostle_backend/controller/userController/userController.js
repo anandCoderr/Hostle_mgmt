@@ -7,7 +7,7 @@ import { statusVar } from "../../common/static/statusCodeVar.js";
 import Inviteuser from "../../modal/adminModal/inviteModal.js";
 import userSchema from "../../modal/userModal/userModal.js";
 
-const registerApi = async (req, res) => {
+export const registerApi = async (req, res) => {
   try {
     const { name, email, room, phone, password } = req.body;
     console.log("req.user:---------->", req.user);
@@ -43,8 +43,8 @@ const registerApi = async (req, res) => {
       return;
     }
 
-    const inviteUserRes = await Inviteuser.updateOne(
-      { email, _id: inviteUserRes._id },
+    const inviteUserResVar = await Inviteuser.updateOne(
+      { email, _id: inviteUserResVar._id },
       {
         $set: {
           isUsed: true,
@@ -53,7 +53,7 @@ const registerApi = async (req, res) => {
       },
     );
 
-    if (!inviteUserRes) {
+    if (!inviteUserResVar) {
       console.log("In Inviteuser schema data not updated");
       return;
     }

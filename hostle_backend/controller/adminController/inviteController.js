@@ -50,21 +50,38 @@ export const sendInviteController = async (req, res) => {
       });
     }
 
-    const inviteUser = Inviteuser({
-      email,
-      token,
-      // invitedBy: req.user._id,
-      expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000),
-    });
+    if (invitedUserRes) {
+      const inviteUserRes = await Inviteuser.updateOne(
+        { email, _id: invitedUserRes._id },
+        {
+          $set: {
+            token,
+            expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000),
+          },
+        },
+      );
 
-    const inviteUserRes = await inviteUser.save();
+      if (!inviteUserRes) {
+        console.log("In Inviteuser schema data not updated");
+        return;
+      }
+    } else {
+      const inviteUser = Inviteuser({
+        email,
+        token,
+        // invitedBy: req.user._id,
+        expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000),
+      });
 
-    if (!inviteUserRes) {
-      console.log("invited User's data can't be saved");
-      return;
+      const inviteUserRes = await inviteUser.save();
+
+      if (!inviteUserRes) {
+        console.log("invited User's data can't be saved");
+        return;
+      }
     }
 
-    return successHelper(res, messageStatic.EMAIL_SENT_SUCCESS);
+    return successHelper(res, messageStatic.EMAIL_SENT_SUCCESS, 200, token);
   } catch (error) {
     console.log(error);
   }

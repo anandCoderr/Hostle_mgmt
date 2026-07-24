@@ -3,6 +3,6 @@ import sendInviteController from "../../controller/adminController/inviteControl
 
 const inviteRouter = Router();
 
-inviteRouter.use("/send-email-register", sendInviteController);
+inviteRouter.post("/send-email-register", sendInviteController);
 
 export default inviteRouter;

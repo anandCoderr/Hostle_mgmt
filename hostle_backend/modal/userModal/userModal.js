@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const userModal = await mongoose.create(
+const userModal = await mongoose.Schema(
   {
     name: {
       type: String,
@@ -40,6 +40,6 @@ const userModal = await mongoose.create(
   },
 );
 
-const userSchema = mongoose.Schema("Users", userModal);
+const userSchema = mongoose.model("Users", userModal);
 
 export default userSchema;
