@@ -1,3 +1,4 @@
+import { bcryptCompare } from "../../common/helper/bcryptFun.js";
 import {
   errorHelper,
   successHelper,
@@ -88,5 +89,43 @@ export const registerApi = async (req, res) => {
       status: statusVar.SERVER_ERROR,
       message: messageStatic.SERVER_ERROR,
     });
+  }
+};
+
+// ----------------------adminLoginApi
+
+export const userLoginApi = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    const userRes = await userSchema.findOne({ email: email });
+
+    if (!userRes) {
+      return errorHelper(res, {
+        status: statusVar.NOT_FOUND,
+        message: messageStatic.USER_NOT_FOUND,
+      });
+    }
+
+    const bcryptCompareRes = bcryptCompare(password, userRes.password);
+
+    if (!bcryptCompareRes) {
+      return errorHelper(res, {
+        message: messageStatic.PASSWORD_NOT_MATCH,
+      });
+    }
+
+    // ----------jwt conversion
+
+    const token = jwtConvert(userRes, "365d");
+
+    return successHelper(
+      res,
+      messageStatic.ADMIN_ADDED_SUCCESS,
+      statusVar.CREATED_SUCCESSFULLY,
+      { data: userRes, token: token },
+    );
+  } catch (error) {
+    console.log("error:------->", error);
   }
 };

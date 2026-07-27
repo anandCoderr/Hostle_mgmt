@@ -82,7 +82,7 @@ const menuSchema = new mongoose.Schema(
 
     createdBy: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+      ref: "Admin",
       required: true,
     },
 
@@ -95,3 +95,7 @@ const menuSchema = new mongoose.Schema(
     timestamps: true,
   },
 );
+
+const menuSchema = mongoose.modal("Menu", menuSchema);
+
+export default menuSchema;
