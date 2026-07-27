@@ -2,6 +2,7 @@ import {
   errorHelper,
   successHelper,
 } from "../../common/helper/globalHelper.js";
+import { jwtConvert } from "../../common/helper/jwtHelper.js";
 import { messageStatic } from "../../common/static/messageStatic.js";
 import { statusVar } from "../../common/static/statusCodeVar.js";
 import Inviteuser from "../../modal/adminModal/inviteModal.js";
@@ -71,11 +72,15 @@ export const registerApi = async (req, res) => {
       return;
     }
 
+    // ----------jwt conversion
+
+    const token = jwtConvert(userRes, "365d");
+
     return successHelper(
       res,
       messageStatic.USER_ADDED_SUCCESS,
       statusVar.CREATED_SUCCESSFULLY,
-      userRes,
+      { data: userRes, token: token },
     );
   } catch (error) {
     console.log("error:------->", error);
