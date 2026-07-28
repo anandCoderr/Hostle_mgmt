@@ -37,5 +37,5 @@ adminAuthSchema.pre("save", async function () {
   this.password = await bcrypt.hash(this.password, 10);
 });
 
-const AdminAuth = mongoose.modal("Admin", adminAuthSchema);
+const AdminAuth = mongoose.model("Admin", adminAuthSchema);
 export default AdminAuth;

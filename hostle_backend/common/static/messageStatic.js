@@ -16,4 +16,8 @@ export const messageStatic = {
 
   // ----------SERVER ERROR
   SERVER_ERROR: "Server error",
+
+  // ----menu added
+
+  MENU_ADDED: "Menu hads been added successfully",
 };

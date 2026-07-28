@@ -26,7 +26,7 @@ export const adminRegisterApi = async (req, res) => {
     const adminSchemaRes = AdminAuth({
       name,
       email,
-      phone,
+      mobile,
       password,
     });
 
@@ -71,7 +71,7 @@ export const adminLoginApi = async (req, res) => {
       });
     }
 
-    const bcryptCompareRes = bcryptCompare(password, adminRes.password);
+    const bcryptCompareRes = await bcryptCompare(password, adminRes.password);
 
     if (!bcryptCompareRes) {
       return errorHelper(res, {

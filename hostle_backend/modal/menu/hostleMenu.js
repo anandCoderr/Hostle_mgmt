@@ -36,7 +36,7 @@ const mealSchema = new mongoose.Schema(
   },
 );
 
-const menuSchema = new mongoose.Schema(
+const menuSchemaVar = new mongoose.Schema(
   {
     type: {
       type: String,
@@ -96,6 +96,6 @@ const menuSchema = new mongoose.Schema(
   },
 );
 
-const menuSchema = mongoose.modal("Menu", menuSchema);
+const menuSchema = mongoose.model("Menu", menuSchemaVar);
 
 export default menuSchema;

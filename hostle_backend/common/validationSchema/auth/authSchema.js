@@ -19,3 +19,23 @@ export const userRegisterValidate = (type) => {
 
   return allSchema[type];
 };
+
+// ---------admin auth schema
+
+export const adminRegisterValidate = (type) => {
+  const allSchema = {
+    adminRegisterRule: z.object({
+      name: nameSchemaFun(),
+      email: emailSchema,
+      mobile: phoneNumSchemaFun(),
+      password: passwordSchema(),
+    }),
+
+    adminLoginRule: z.object({
+      email: emailSchema,
+      password: passwordSchema(),
+    }),
+  };
+
+  return allSchema[type];
+};
