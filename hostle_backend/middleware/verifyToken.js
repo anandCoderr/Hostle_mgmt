@@ -39,7 +39,8 @@ import { jwtVerify } from "../common/helper/jwtHelper.js";
 
 const verifyToken = (req, res, next) => {
   // ── 1. Extract the Authorization header ─────────────────────
-  const authHeader = req.headers["authorization"] || req.headers["Authorization"];
+  const authHeader =
+    req.headers["authorization"] || req.headers["Authorization"];
 
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
     return res.status(401).json({
@@ -60,6 +61,8 @@ const verifyToken = (req, res, next) => {
 
   // ── 3. Verify using the existing jwtVerify helper ────────────
   const decoded = jwtVerify(token);
+
+  console.log("decoded:-------->", decoded);
 
   // jwtVerify returns { status: 401, message: "..." } on failure
   if (decoded?.status === 401) {

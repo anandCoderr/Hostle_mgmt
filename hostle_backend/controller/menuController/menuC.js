@@ -9,6 +9,7 @@ import menuSchema from "../../modal/menu/hostleMenu.js";
 export const addMenu = async (req, res) => {
   try {
     const { _id: createdBy } = req.user;
+    console.log("req.body:----->", req.body);
     const { type, day, date, description, title, breakfast, lunch, dinner } =
       req.body;
 
@@ -29,7 +30,8 @@ export const addMenu = async (req, res) => {
         },
         {
           upsert: true,
-          new: true,
+          // new: true,
+          returnDocument: "after",
         },
       );
 
@@ -65,7 +67,8 @@ export const addMenu = async (req, res) => {
         },
         {
           upsert: true,
-          new: true,
+          // new: true,
+          returnDocument: "after",
         },
       );
 
