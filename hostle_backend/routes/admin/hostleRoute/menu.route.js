@@ -1,6 +1,9 @@
 import { Router } from "express";
 
-import { addMenu } from "../../../controller/menuController/menuC.js";
+import {
+  addMenu,
+  getAllMenu,
+} from "../../../controller/menuController/menuC.js";
 import { menuValidate } from "../../../common/validationSchema/menuSchema/index.js";
 import validateRequest from "../../../middleware/validateRequest.js";
 import verifyToken from "../../../middleware/verifyToken.js";
@@ -15,5 +18,7 @@ menuRouter.post(
   validateRequest({ body: menuValidate("addMenuRule") }),
   addMenu,
 );
+
+menuRouter.get("/get", verifyToken, getAllMenu);
 
 export default menuRouter;
