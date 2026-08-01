@@ -142,3 +142,110 @@ export const getAllMenu = async (req, res) => {
     });
   }
 };
+
+// --------update s3eselcted meny
+
+export const updateMenu = async (req, res) => {
+  try {
+    const { _id: createdBy } = req.user;
+
+    const {
+      menuId,
+      mealType,
+      name,
+      imageUrl,
+      foodId,
+      imgId,
+      // -------------to edit main desc and title
+      description,
+      title,
+      date,
+      // -------------meal schema's desc
+      mealSchemaDesc,
+    } = req.body;
+
+    // const updateRes = await menuSchema.updateOne(
+    //   { _id: menuId },
+    //   {
+    //     $set: {
+    //       [`${mealType}.foods.$[food].name`]: name,
+    //       [`${mealType}.foods.$[food].images.$[imageObj].url`]: imageUrl,
+    //     },
+    //   },
+    //   {
+    //     arrayFilters: [
+    //       {
+    //         "food._id": foodId,
+    //       },
+    //       {
+    //         "imageObj._id": imgId,
+    //       },
+    //     ],
+    //   },
+    // );
+
+    // ---------to edit main desc and title
+    const update = {
+      ...(description && { description }),
+      ...(title && { title }),
+      ...(date && { date }),
+    };
+
+    const arrayFilters = [];
+
+    // -----------mealSchemaDesc
+
+    if (mealSchemaDesc) {
+      update[`${mealType}.description`] = mealSchemaDesc;
+    }
+
+    // -----------------to edit menu's image and desc
+
+    if (name) {
+      update[`${mealType}.foods.$[food].name`] = name;
+
+      arrayFilters.push({
+        "food._id": foodId,
+      });
+    }
+
+    if (imageUrl) {
+      update[`${mealType}.foods.$[food].images.$[imageObj].url`] = imageUrl;
+
+      if (!arrayFilters.some((obj) => obj["food._id"])) {
+        arrayFilters.push({
+          "food._id": foodId,
+        });
+      }
+
+      arrayFilters.push({
+        "imageObj._id": imgId,
+      });
+    }
+
+    const updateRes = await menuSchema.updateOne(
+      { _id: menuId, createdBy },
+      {
+        $set: update,
+      },
+      {
+        arrayFilters,
+      },
+    );
+
+    if (updateRes.modifiedCount === 0) {
+      return errorHelper(res, {
+        status: statusVar.NOT_FOUND,
+        message: messageStatic.MENU_NOT_FOUND,
+      });
+    }
+
+    return successHelper(res, messageStatic.MENU_UPDATED, statusVar.SUCCESS);
+  } catch (error) {
+    console.log("error:------->", error);
+    return errorHelper(res, {
+      status: statusVar.SERVER_ERROR,
+      message: messageStatic.SERVER_ERROR,
+    });
+  }
+};

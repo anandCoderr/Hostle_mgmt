@@ -3,6 +3,7 @@ import { Router } from "express";
 import {
   addMenu,
   getAllMenu,
+  updateMenu,
 } from "../../../controller/menuController/menuC.js";
 import { menuValidate } from "../../../common/validationSchema/menuSchema/index.js";
 import validateRequest from "../../../middleware/validateRequest.js";
@@ -20,5 +21,13 @@ menuRouter.post(
 );
 
 menuRouter.get("/get", verifyToken, getAllMenu);
+
+// ---------------updated menu
+menuRouter.put(
+  "/update-menu",
+  verifyToken,
+  validateRequest({ body: menuValidate("updateMenuRule") }),
+  updateMenu,
+);
 
 export default menuRouter;

@@ -22,4 +22,5 @@ export const messageStatic = {
   MENU_ADDED: "Menu hads been added successfully",
   MENU_NOT_FOUND: "Menu not found",
   MENU_SENT_SUCCESSFULLY: "Menu sent successfully",
+  MENU_UPDATED: "Menu updated successfully",
 };

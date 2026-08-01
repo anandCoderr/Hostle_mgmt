@@ -1,5 +1,9 @@
 import { z } from "zod";
-import { descriptionSchemaFun, nameSchemaFun } from "../_commonSchema.js";
+import {
+  descriptionSchemaFun,
+  nameRequiredSchema,
+  nameSchemaFun,
+} from "../_commonSchema.js";
 
 const weekDays = [
   "MONDAY",
@@ -71,6 +75,23 @@ export const menuValidate = (type) => {
       weeklyMenuRule,
       specialMenuRule,
     ]),
+    // ------------update menu
+    updateMenuRule: z.object({
+      menuId: nameRequiredSchema("Menu Id"),
+      mealType: z.enum(["breakfast", "lunch", "dinner"]),
+      name: descriptionSchemaFun("Food name must be at least 2 characters"),
+      imageUrl: z.string().url("Food image must be a valid URL"),
+      foodId: descriptionSchemaFun("Food Id is requred to modify"),
+      imgId: descriptionSchemaFun("Img Id is requred to modify"),
+      // -------------to edit main desc and title
+      description: descriptionSchemaFun(),
+      title: descriptionSchemaFun("Food Title must be at least 2 characters"),
+      date: z.coerce.date({
+        message: "A valid special-menu date is required",
+      }),
+      // -------------meal schema's desc
+      mealSchemaDesc: descriptionSchemaFun(),
+    }),
   };
 
   return allSchema[type];

@@ -8,6 +8,15 @@ export const emailSchema = z
   .nonempty("Email is required")
   .regex(/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/, "Invalid email format");
 
+// -------------required name
+
+export const nameRequiredSchema = (name = "Name") =>
+  z
+    .string()
+    .nonempty(`${name} is required`)
+    .min(0, `${name} is too short`)
+    .max(50, `${name} too long`);
+
 // name
 
 export const nameSchema = z
