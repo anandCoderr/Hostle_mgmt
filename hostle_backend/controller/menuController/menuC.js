@@ -162,6 +162,7 @@ export const updateMenu = async (req, res) => {
       date,
       // -------------meal schema's desc
       mealSchemaDesc,
+      newFoods,
     } = req.body;
     // console.log("req.body:----->", req.body);
 
@@ -194,6 +195,14 @@ export const updateMenu = async (req, res) => {
 
     const arrayFilters = [];
 
+    // ----------------used to add new food either in lunch || breakfast || dinner
+
+    // if(newFoods)
+    // {
+    //   update[`${mealType}.foods`]
+
+    // }
+
     // -----------mealSchemaDesc
 
     if (mealSchemaDesc) {
@@ -224,11 +233,23 @@ export const updateMenu = async (req, res) => {
       });
     }
 
+    // ---------------------------- dynamic 2nd argument adding
+
+    const mongoUpdate = {};
+
+    if (Object.keys(update).length > 0 && update) {
+      mongoUpdate.$set = update;
+    }
+
+    if (Object.keys(newFoods).length > 0 && newFoods) {
+      mongoUpdate.$push = {
+        [`${mealType}.foods`]: newFoods,
+      };
+    }
+
     const updateRes = await menuSchema.updateOne(
       { _id: menuId, createdBy },
-      {
-        $set: update,
-      },
+      mongoUpdate,
       {
         arrayFilters,
       },

@@ -110,6 +110,7 @@ export const menuValidate = (type) => {
         .optional(),
       // -------------meal schema's desc
       mealSchemaDesc: descriptionSchemaFun(),
+      newFoods: foodRule.optional(),
     }),
 
     // -----------------delte menu
