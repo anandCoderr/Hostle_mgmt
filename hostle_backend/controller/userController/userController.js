@@ -99,6 +99,7 @@ export const userLoginApi = async (req, res) => {
     const { email, password } = req.body;
 
     const userRes = await userSchema.findOne({ email: email });
+    console.log("userRes:----->", userRes);
 
     if (!userRes) {
       return errorHelper(res, {

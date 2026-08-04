@@ -15,6 +15,10 @@ export const userRegisterValidate = (type) => {
       phone: phoneNumSchemaFun(),
       password: passwordSchema(),
     }),
+    userLoginRule: z.object({
+      email: emailSchema,
+      password: passwordSchema(),
+    }),
   };
 
   return allSchema[type];
