@@ -2,6 +2,7 @@ import { Router } from "express";
 
 import {
   addMenu,
+  deleteMenu,
   getAllMenu,
   updateMenu,
 } from "../../../controller/menuController/menuC.js";
@@ -11,11 +12,11 @@ import verifyToken from "../../../middleware/verifyToken.js";
 
 const menuRouter = Router();
 
-// menuRouter.use(verifyToken);
+menuRouter.use(verifyToken);
 
 menuRouter.post(
   "/add",
-  verifyToken,
+  // verifyToken,
   validateRequest({ body: menuValidate("addMenuRule") }),
   addMenu,
 );
@@ -24,10 +25,18 @@ menuRouter.get("/get", verifyToken, getAllMenu);
 
 // ---------------updated menu
 menuRouter.put(
-  "/update-menu",
-  verifyToken,
+  "/update",
+  // verifyToken,
   validateRequest({ body: menuValidate("updateMenuRule") }),
   updateMenu,
+);
+
+// --------delete menu
+menuRouter.delete(
+  "/delete",
+  // verifyToken,
+  validateRequest({ query: menuValidate("deleteMenuRule") }),
+  deleteMenu,
 );
 
 export default menuRouter;

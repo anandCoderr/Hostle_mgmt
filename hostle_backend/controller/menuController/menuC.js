@@ -163,6 +163,7 @@ export const updateMenu = async (req, res) => {
       // -------------meal schema's desc
       mealSchemaDesc,
     } = req.body;
+    // console.log("req.body:----->", req.body);
 
     // const updateRes = await menuSchema.updateOne(
     //   { _id: menuId },
@@ -243,6 +244,82 @@ export const updateMenu = async (req, res) => {
     return successHelper(res, messageStatic.MENU_UPDATED, statusVar.SUCCESS);
   } catch (error) {
     console.log("error:------->", error);
+    return errorHelper(res, {
+      status: statusVar.SERVER_ERROR,
+      message: messageStatic.SERVER_ERROR,
+    });
+  }
+};
+
+// ---------------delete menu.
+
+export const deleteMenu = async (req, res) => {
+  try {
+    const { _id: createdBy } = req.user;
+
+    // menuId : this is used to delete entire menu of monday || tuesday etc
+    // where this id will be only for selective deletion of menu's image || breakfast, lunch, dinner
+
+    const { menuId, id, foodType, foodId, imgId } =
+      req.validated?.query ?? req.query;
+
+    let paylaod;
+    const arrayFilters = [];
+
+    const filterVar = {
+      _id: menuId || id,
+      createdBy: createdBy,
+    };
+
+    // --------if not filter id then
+
+    if (!menuId) {
+      if (foodId) {
+        paylaod = { [`${foodType}.foods`]: { _id: foodId } };
+      }
+
+      if (imgId) {
+        paylaod = { [`${foodType}.foods.$[food].images`]: { _id: imgId } };
+
+        arrayFilters.push({
+          "food._id": foodId,
+        });
+      }
+    }
+
+    let deleteRes;
+
+    if (menuId) {
+      deleteRes = await menuSchema.deleteOne(filterVar);
+    } else {
+      deleteRes = await menuSchema.updateOne(
+        filterVar,
+        {
+          $pull: paylaod,
+        },
+        {
+          arrayFilters,
+        },
+      );
+    }
+
+    console.log("deleteRes:------->", deleteRes);
+
+    if (deleteRes.deletedCount === 0) {
+      return errorHelper(res, {
+        status: statusVar.NOT_FOUND,
+        message: messageStatic.MENU_NOT_FOUND,
+      });
+    }
+
+    return successHelper(
+      res,
+      messageStatic.DELETED_SUCCESSFULLY,
+      statusVar.SUCCESS,
+    );
+  } catch (error) {
+    console.log("error:------->", error);
+
     return errorHelper(res, {
       status: statusVar.SERVER_ERROR,
       message: messageStatic.SERVER_ERROR,

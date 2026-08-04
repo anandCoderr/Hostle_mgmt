@@ -69,6 +69,7 @@ const validateRequest = (schemas = {}) => {
       query: req.query,
       headers: req.headers,
     };
+    // console.log("sources:----->", sources);
 
     // ── Run each provided schema ─────────────────────────────
     for (const [source, schema] of Object.entries(schemas)) {
@@ -80,9 +81,18 @@ const validateRequest = (schemas = {}) => {
         // Flatten Zod issues into a clean key → message map
         errors[source] = result.error.issues.map((issue) => issue.message);
       } else {
-        // ── Write parsed/coerced value back to the request ───
-        // This ensures coercions (e.g. z.coerce.number()) take effect
-        req[source] = result.data;
+        // Always keep the parsed value in one safe place. Some Express request
+        // properties (notably `req.query` in Express 5) are getter-only and
+        // cannot be reassigned.
+        req.validated ??= {};
+        req.validated[source] = result.data;
+
+        // Preserve the existing convenient behaviour for writable sources.
+        // Query values should be read from `req.validated.query` when a schema
+        // coerces or transforms them.
+        if (source !== "query") {
+          req[source] = result.data;
+        }
       }
     }
 

@@ -4,6 +4,8 @@ import {
   nameRequiredSchema,
   nameSchemaFun,
 } from "../_commonSchema.js";
+import { deleteMenu } from "../../../controller/menuController/menuC.js";
+import { objectId, optionalObjectId } from "../mongoIdSchema/mongoIdSchema.js";
 
 const weekDays = [
   "MONDAY",
@@ -69,6 +71,21 @@ const specialMenuRule = z
   })
   .strict();
 
+// -----------------related delete functionality
+
+const DeleteMenuSchema = z.object({
+  menuId: objectId(),
+});
+
+const DeleteFoodSchema = z.object({
+  id: objectId(),
+  foodType: z.enum(["breakfast", "lunch", "dinner"]),
+  foodId: optionalObjectId(),
+  imgId: optionalObjectId(),
+});
+
+// ----------------all menu validation container
+
 export const menuValidate = (type) => {
   const allSchema = {
     addMenuRule: z.discriminatedUnion("type", [
@@ -78,20 +95,26 @@ export const menuValidate = (type) => {
     // ------------update menu
     updateMenuRule: z.object({
       menuId: nameRequiredSchema("Menu Id"),
-      mealType: z.enum(["breakfast", "lunch", "dinner"]),
+      mealType: z.enum(["breakfast", "lunch", "dinner"]).optional(),
       name: descriptionSchemaFun("Food name must be at least 2 characters"),
-      imageUrl: z.string().url("Food image must be a valid URL"),
+      imageUrl: z.string().url("Food image must be a valid URL").optional(),
       foodId: descriptionSchemaFun("Food Id is requred to modify"),
       imgId: descriptionSchemaFun("Img Id is requred to modify"),
       // -------------to edit main desc and title
       description: descriptionSchemaFun(),
       title: descriptionSchemaFun("Food Title must be at least 2 characters"),
-      date: z.coerce.date({
-        message: "A valid special-menu date is required",
-      }),
+      date: z.coerce
+        .date({
+          message: "A valid special-menu date is required",
+        })
+        .optional(),
       // -------------meal schema's desc
       mealSchemaDesc: descriptionSchemaFun(),
     }),
+
+    // -----------------delte menu
+
+    deleteMenuRule: z.union([DeleteMenuSchema, DeleteFoodSchema]),
   };
 
   return allSchema[type];
