@@ -111,8 +111,10 @@ export const getAllMenu = async (req, res) => {
     const filterPaylaod = {
       type,
       createdBy: createdBy,
-      ...(isToday && { day: getDay() }),
+      ...(isToday && { day: getDay().toUpperCase() }),
     };
+
+    console.log("filterPaylaod:----->", filterPaylaod);
 
     const menuRes = await menuSchema.find(filterPaylaod);
 
