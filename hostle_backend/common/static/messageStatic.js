@@ -5,7 +5,8 @@ export const messageStatic = {
 
   // --------------------user
   USER_NOT_FOUND: "User not found",
-  USER_AVAILABLE: "User is alredy available",
+  USER_AVAILABLE:
+    "User is alredy available, mobile or email or both must be used",
   USER_AVAILABLE_AND_IN_USE: "Same user can't take room again.",
   USER_ADDED_SUCCESS: "User added successfully",
 

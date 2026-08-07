@@ -16,7 +16,11 @@ export const registerApi = async (req, res) => {
 
     // ---------------ALREADY AVAILABLE
 
-    const findUserRes = await userSchema.findOne({ email: email });
+    const findUserRes = await userSchema.findOne({
+      $or: [{ email: email }, { phone: phone }],
+    });
+
+    console.log("findUserRes:-------->", findUserRes);
 
     if (findUserRes) {
       return errorHelper(res, {
@@ -27,7 +31,9 @@ export const registerApi = async (req, res) => {
 
     // -------------invite user check
 
-    const inviteUserRes = await Inviteuser.findOne({ email: email });
+    const inviteUserRes = await Inviteuser.findOne({
+      $or: [{ email: email }, { phone: phone }],
+    });
 
     if (!inviteUserRes) {
       return errorHelper(res, {

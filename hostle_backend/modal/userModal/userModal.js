@@ -47,6 +47,14 @@ userModal.pre("save", async function () {
   this.password = await bcrypt.hash(this.password, 10);
 });
 
+// userModal.index({ email: 1 });
+// userModal.index({ phone: 1 });
+userModal.index({ room: 1 });
+userModal.index({ phone: 1, email: 1 });
+
+userModal.index({ room: 1, email: 1 }, { unique: true });
+userModal.index({ room: 1, phone: 1 }, { unique: true });
+
 const userSchema = mongoose.model("Users", userModal);
 
 export default userSchema;

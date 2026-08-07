@@ -41,6 +41,7 @@ const inviteModal = new mongoose.Schema(
   },
 );
 
+inviteModal.index({ email: 1 });
 const Inviteuser = mongoose.model("Inviteuser", inviteModal);
 
 export default Inviteuser;

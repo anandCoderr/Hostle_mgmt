@@ -16,6 +16,23 @@ const foodSchema = new mongoose.Schema(
         },
       },
     ],
+
+    // ── Denormalised counters ─────────────────────────────────
+    // Maintained with $inc alongside every Likes / Comments
+    // write. Rendering a menu must never count those collections.
+    // Treated as approximate — see Likes/Comments for the source
+    // of truth if a reconciliation job is ever needed.
+    likeCount: {
+      type: Number,
+      default: 0,
+      min: 0,
+    },
+
+    commentCount: {
+      type: Number,
+      default: 0,
+      min: 0,
+    },
   },
   {
     _id: true,
