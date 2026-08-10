@@ -33,6 +33,10 @@ const foodSchema = new mongoose.Schema(
       default: 0,
       min: 0,
     },
+    isLiked: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     _id: true,

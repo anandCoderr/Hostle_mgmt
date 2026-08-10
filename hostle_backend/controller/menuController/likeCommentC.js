@@ -9,10 +9,13 @@ import likeModel from "../../modal/menu/likeMenu.js";
 
 // ------------------like fucntion
 
-const dislikeDescFun = async (payload, menu, food) => {
+const dislikeDescFun = async (mealType, menu, food, amount, isLiked) => {
   return await menuSchema.updateOne(
     { _id: menu },
-    { $set: payload },
+    {
+      $inc: { [`${mealType}.foods.$[food].likeCount`]: amount },
+      $set: { [`${mealType}.foods.$[food].isLiked`]: isLiked },
+    },
     {
       arrayFilters: [
         {
@@ -26,10 +29,9 @@ const dislikeDescFun = async (payload, menu, food) => {
 export const likeController = async (req, res) => {
   try {
     const { _id: user } = req.user;
-    const { menu, mealType, food } = req.body;
+    const { menu, mealType, food, isLiked } = req.body;
 
     // --------Disliked is found
-    let payload = [];
 
     const likeModelRes = await likeModel.deleteOne({
       user,
@@ -39,9 +41,7 @@ export const likeController = async (req, res) => {
     });
 
     if (likeModelRes.deletedCount > 0) {
-      payload[`$[mealType].foods.$[food].likeCount`] = { $desc: -1 };
-
-      const updateRes = await dislikeDescFun(payload, menu, food);
+      const updateRes = await dislikeDescFun(mealType, menu, food, -1, isLiked);
 
       if (!updateRes || updateRes.modifiedCount === 0) {
         console.log("updateRes:------->", updateRes);
@@ -74,9 +74,7 @@ export const likeController = async (req, res) => {
       });
     }
 
-    payload[`$[mealType].foods.$[food].likeCount`] = { $inc: 1 };
-
-    const updateRes = await dislikeDescFun(payload, menu, food);
+    const updateRes = await dislikeDescFun(mealType, menu, food, 1, isLiked);
 
     if (!updateRes || updateRes.modifiedCount === 0) {
       console.log("updateRes:------->", updateRes);

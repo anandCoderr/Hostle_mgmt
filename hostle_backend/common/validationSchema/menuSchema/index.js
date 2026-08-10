@@ -124,6 +124,7 @@ export const menuValidate = (type) => {
       // userId: objectId(),
       mealType: z.enum(["breakfast", "lunch", "dinner"]),
       food: objectId("Food Id"),
+      isLiked: z.boolean(),
     }),
   };
 
