@@ -116,6 +116,15 @@ export const menuValidate = (type) => {
     // -----------------delte menu
 
     deleteMenuRule: z.union([DeleteMenuSchema, DeleteFoodSchema]),
+
+    // --------------------liek menuSchema
+
+    likeDislikeMenuRule: z.object({
+      menu: objectId(),
+      // userId: objectId(),
+      mealType: z.enum(["breakfast", "lunch", "dinner"]),
+      food: objectId("Food Id"),
+    }),
   };
 
   return allSchema[type];

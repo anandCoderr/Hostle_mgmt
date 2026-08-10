@@ -27,4 +27,11 @@ export const messageStatic = {
 
   // -------------deleted succewssfully
   DELETED_SUCCESSFULLY: "Deleted successfully",
+
+  // ----------------LIKE AND DILIKE
+
+  SUCCESS_LIKED: "Liked !!!",
+  LIKED_UNDU: "Disliked !!!",
+  ISSUE_WHILE_LIKE_INC_COUNT: "Issue while like inc count",
+  ISSUE_WHILE_DISLIKE_DESC_COUNT: "Issue while dislike desc count",
 };
