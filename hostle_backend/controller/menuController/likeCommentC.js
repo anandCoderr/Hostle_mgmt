@@ -4,6 +4,7 @@ import {
 } from "../../common/helper/globalHelper.js";
 import { messageStatic } from "../../common/static/messageStatic.js";
 import { statusVar } from "../../common/static/statusCodeVar.js";
+import commentModel from "../../modal/menu/commentsMenu.js";
 import menuSchema from "../../modal/menu/hostleMenu.js";
 import likeModel from "../../modal/menu/likeMenu.js";
 
@@ -89,6 +90,51 @@ export const likeController = async (req, res) => {
     return successHelper(res, messageStatic.SUCCESS_LIKED, statusVar.SUCCESS);
   } catch (error) {
     console.log("error:", error);
+    return errorHelper(res, {
+      status: statusVar.SERVER_ERROR,
+      message: messageStatic.SERVER_ERROR,
+    });
+  }
+};
+
+// =----------comment controller
+
+export const commentController = async (req, res) => {
+  try {
+    const { _id: user } = req.user;
+    const { menu, mealType, food, comment } = req.body;
+
+    const commentModelCreate = commentModel({
+      user,
+      menu,
+      mealType,
+      food,
+      comment,
+    });
+
+    const [commentModelCreateRes, menuUpdatedRes] = await Promise.all([
+      commentModelCreate.save(),
+      menuSchema.updateOne(
+        { _id: menu },
+        { $inc: { [`${mealType}.foods.$[food].commentCount`]: 1 } },
+        {
+          arrayFilters: [{ "food._id": food }],
+        },
+      ),
+    ]);
+
+    if (!commentModelCreateRes || menuUpdatedRes.modifiedCount === 0) {
+      return errorHelper(res, {
+        status: statusVar.SERVER_ERROR,
+        message: messageStatic.SERVER_ERROR,
+      });
+    }
+
+    console.log("success menuUpdatedRes :----------->", menuUpdatedRes);
+
+    return successHelper(res, messageStatic.SUCCESS_COMMENT, statusVar.SUCCESS);
+  } catch (error) {
+    console.log("error:-------->", error);
     return errorHelper(res, {
       status: statusVar.SERVER_ERROR,
       message: messageStatic.SERVER_ERROR,

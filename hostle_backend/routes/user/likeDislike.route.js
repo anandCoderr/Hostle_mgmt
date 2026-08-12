@@ -1,17 +1,28 @@
 import { Router } from "express";
-import { likeController } from "../../controller/menuController/likeCommentC.js";
+import {
+  commentController,
+  likeController,
+} from "../../controller/menuController/likeCommentC.js";
 import verifyToken from "../../middleware/verifyToken.js";
 import validateRequest from "../../middleware/validateRequest.js";
 import { menuValidate } from "../../common/validationSchema/menuSchema/index.js";
 
-const userLikeRouter = Router();
+const globaMenuRoute = Router();
 
-userLikeRouter.use(verifyToken);
+globaMenuRoute.use(verifyToken);
 
-userLikeRouter.post(
+globaMenuRoute.post(
   "/like",
   validateRequest({ body: menuValidate("likeDislikeMenuRule") }),
   likeController,
 );
 
-export default userLikeRouter;
+// -------------------comment
+
+globaMenuRoute.post(
+  "/add/comment",
+  validateRequest({ body: menuValidate("commentMenuRule") }),
+  commentController,
+);
+
+export default globaMenuRoute;

@@ -34,4 +34,7 @@ export const messageStatic = {
   LIKED_UNDU: "Disliked !!!",
   ISSUE_WHILE_LIKE_INC_COUNT: "Issue while like inc count",
   ISSUE_WHILE_DISLIKE_DESC_COUNT: "Issue while dislike desc count",
+
+  // ---------comment
+  SUCCESS_COMMENT: "Successfully comment added !!!",
 };

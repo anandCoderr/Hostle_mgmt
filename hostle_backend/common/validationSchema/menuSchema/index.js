@@ -126,6 +126,15 @@ export const menuValidate = (type) => {
       food: objectId("Food Id"),
       isLiked: z.boolean(),
     }),
+
+    // -------------------------comment
+    commentMenuRule: z.object({
+      menu: objectId(),
+      // userId: objectId(),
+      mealType: z.enum(["breakfast", "lunch", "dinner"]),
+      food: objectId("Food Id"),
+      comment: nameRequiredSchema("Comment"),
+    }),
   };
 
   return allSchema[type];
