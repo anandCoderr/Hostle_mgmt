@@ -1,0 +1,6 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 1, "column": 0}, "map": {"version":3,"sources":["turbopack:///turbopack:///[project]/src/app/dashboard/DashboardShell.module.scss"],"sourcesContent":["@use \"../../scss/variables.scss\" as *;\n\n.dashboard_layout {\n  display: flex;\n  min-height: 100vh;\n  background-color: #f5f6fa;\n}\n\n.main_content {\n  flex: 1;\n  padding: 24px 28px;\n  overflow-y: auto;\n  min-height: 100vh;\n}\n"],"names":[],"mappings":"AAEA;;;;;;AAMA"}}]
+}

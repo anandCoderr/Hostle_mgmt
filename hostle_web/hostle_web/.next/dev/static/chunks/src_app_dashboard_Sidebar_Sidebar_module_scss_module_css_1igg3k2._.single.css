@@ -1,0 +1,111 @@
+/* [project]/src/app/dashboard/Sidebar/Sidebar.module.scss.module.css [app-client] (css) */
+.Sidebar-module-scss-module__86T0UG__sidebar {
+  z-index: 100;
+  background-color: #0f3d2e;
+  flex-direction: column;
+  width: 260px;
+  min-width: 260px;
+  height: 100vh;
+  display: flex;
+  position: sticky;
+  top: 0;
+  left: 0;
+  overflow: hidden auto;
+}
+
+.Sidebar-module-scss-module__86T0UG__sidebar::-webkit-scrollbar {
+  width: 3px;
+}
+
+.Sidebar-module-scss-module__86T0UG__sidebar::-webkit-scrollbar-track {
+  background: none;
+}
+
+.Sidebar-module-scss-module__86T0UG__sidebar::-webkit-scrollbar-thumb {
+  background-color: #fff3;
+  border-radius: 4px;
+}
+
+.Sidebar-module-scss-module__86T0UG__logo_wrapper {
+  padding: 28px 24px 20px;
+}
+
+.Sidebar-module-scss-module__86T0UG__logo_wrapper .Sidebar-module-scss-module__86T0UG__logo_text {
+  color: #fff;
+  letter-spacing: .5px;
+  text-transform: uppercase;
+  margin-bottom: 0;
+  font-size: 22px;
+  font-weight: 800;
+  line-height: 1.15;
+}
+
+.Sidebar-module-scss-module__86T0UG__nav_list {
+  flex-direction: column;
+  flex: 1;
+  gap: 2px;
+  padding: 0 12px 24px;
+  display: flex;
+}
+
+.Sidebar-module-scss-module__86T0UG__nav_item {
+  cursor: pointer;
+  color: #ffffffbf;
+  border-radius: 10px;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all .3s linear;
+  display: flex;
+  position: relative;
+}
+
+.Sidebar-module-scss-module__86T0UG__nav_item:hover {
+  color: #fff;
+  background-color: #ffffff14;
+}
+
+.Sidebar-module-scss-module__86T0UG__nav_item .Sidebar-module-scss-module__86T0UG__nav_icon {
+  flex-shrink: 0;
+  justify-content: center;
+  align-items: center;
+  font-size: 20px;
+  display: flex;
+}
+
+.Sidebar-module-scss-module__86T0UG__nav_item .Sidebar-module-scss-module__86T0UG__nav_label {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  flex: 1;
+  overflow: hidden;
+}
+
+.Sidebar-module-scss-module__86T0UG__nav_item .Sidebar-module-scss-module__86T0UG__nav_chevron {
+  opacity: .6;
+  justify-content: center;
+  align-items: center;
+  font-size: 16px;
+  transition: all .3s linear;
+  display: flex;
+}
+
+.Sidebar-module-scss-module__86T0UG__nav_item_active {
+  color: #0f3d2e;
+  background-color: #fff;
+  font-weight: 600;
+  box-shadow: 0 2px 8px #00000014;
+}
+
+.Sidebar-module-scss-module__86T0UG__nav_item_active:hover {
+  color: #0f3d2e;
+  background-color: #fff;
+}
+
+.Sidebar-module-scss-module__86T0UG__nav_item_active .Sidebar-module-scss-module__86T0UG__nav_chevron {
+  opacity: 1;
+}
+
+/*# sourceMappingURL=src_app_dashboard_Sidebar_Sidebar_module_scss_module_css_1igg3k2._.single.css.map*/

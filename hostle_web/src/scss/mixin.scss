@@ -1,0 +1,102 @@
+// Media Query //
+
+@mixin break-point($point) {
+  @if $point ==largeDesktop {
+    @media screen and (max-width: 1680px) {
+      @content;
+    }
+  }
+
+  @if $point ==maindesktop {
+    @media screen and (max-width: 1440px) {
+      @content;
+    }
+  }
+
+  @if $point ==desktop {
+    @media screen and (max-width: 1366px) {
+      @content;
+    }
+  }
+
+  @if $point ==miniDesktop {
+    @media screen and (max-width: 1280px) {
+      @content;
+    }
+  }
+
+  @if $point ==landscapeTab {
+    @media screen and (max-width: 1081px) {
+      @content;
+    }
+  }
+
+  @if $point ==xlargeTab {
+    @media screen and (max-width: 1040px) {
+      @content;
+    }
+  }
+
+  @if $point ==largeTab {
+    @media screen and (max-width: 992px) {
+      @content;
+    }
+  }
+
+  @if $point ==tablet {
+    @media screen and (max-width: 868px) {
+      @content;
+    }
+  }
+
+  @if $point ==minTab {
+    @media screen and (max-width: 768px) {
+      @content;
+    }
+  }
+
+  @if $point ==mobile {
+    @media screen and (max-width: 600px) {
+      @content;
+    }
+  }
+
+  @if $point ==smallMobile {
+    @media screen and (max-width: 480px) {
+      @content;
+    }
+  }
+
+  @if $point ==xsmallMobile {
+    @media screen and (max-width: 375px) {
+      @content;
+    }
+  }
+}
+
+//
+
+@mixin background-image {
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+}
+
+@mixin transition {
+  transition: all 0.3s linear;
+}
+
+@mixin positionMiddle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+@mixin hide {
+  width: 0;
+  height: 0;
+  visibility: hidden;
+  opacity: 0;
+  position: absolute;
+}
