@@ -1,0 +1,189 @@
+@use "../../../../scss/variables.scss" as *;
+
+.add_menu_page {
+  padding: 24px;
+  background-color: #f1f2f4;
+  border-radius: 12px;
+  min-height: calc(100vh - 120px);
+
+  .page_header {
+    margin-bottom: 24px;
+    h3 {
+      font-size: 24px;
+      font-weight: 700;
+      color: #0f172a;
+      margin: 0;
+    }
+  }
+
+  .form_card {
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 32px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+
+    .tabs_wrapper {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 32px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid #e2e8f0;
+
+      .tab_btn {
+        padding: 12px 32px;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 15px;
+        color: #64748b;
+        background: transparent;
+        transition: all 0.3s ease;
+
+        &:hover {
+          color: #0f172a;
+          background: #f8fafc;
+        }
+
+        &.active {
+          background: $saffron-color;
+          color: #ffffff;
+          box-shadow: 0 4px 12px rgba(239, 150, 7, 0.3);
+        }
+      }
+    }
+
+    .form_row {
+      display: flex;
+      gap: 24px;
+      margin-bottom: 24px;
+      
+      .field_group {
+        flex: 1;
+        
+        .label {
+          display: block;
+          font-size: 14px;
+          font-weight: 600;
+          color: #334155;
+          margin-bottom: 8px;
+        }
+
+        .error_text {
+          color: #ef4444;
+          font-size: 12px;
+          margin-top: 4px;
+          display: block;
+        }
+      }
+    }
+
+    .meal_section {
+      margin-top: 32px;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      overflow: hidden;
+
+      .meal_header {
+        background: #f8fafc;
+        padding: 16px 24px;
+        border-bottom: 1px solid #e2e8f0;
+        
+        h4 {
+          margin: 0;
+          font-size: 18px;
+          color: #0f172a;
+          text-transform: capitalize;
+        }
+      }
+
+      .meal_body {
+        padding: 24px;
+
+        .foods_list {
+          display: flex;
+          flex-direction: column;
+          gap: 24px;
+
+          .food_item {
+            background: #fdfdfd;
+            border: 1px dashed #cbd5e1;
+            border-radius: 8px;
+            padding: 20px;
+            position: relative;
+
+            .btn_remove_food {
+              position: absolute;
+              top: 12px;
+              right: 12px;
+              width: 32px;
+              height: 32px;
+              border-radius: 50%;
+              background: #fee2e2;
+              color: #ef4444;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              transition: all 0.2s;
+              border: none;
+              cursor: pointer;
+              
+              &:hover {
+                background: #fca5a5;
+                color: #b91c1c;
+              }
+            }
+          }
+        }
+
+        .btn_add_food {
+          margin-top: 16px;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          padding: 10px 20px;
+          background: rgba(239, 150, 7, 0.1);
+          color: $saffron-color;
+          font-weight: 600;
+          border-radius: 8px;
+          transition: all 0.2s;
+          border: none;
+          cursor: pointer;
+
+          &:hover {
+            background: rgba(239, 150, 7, 0.15);
+          }
+        }
+      }
+    }
+
+    .form_actions {
+      margin-top: 40px;
+      display: flex;
+      justify-content: flex-end;
+      gap: 16px;
+      border-top: 1px solid #e2e8f0;
+      padding-top: 24px;
+
+      .btn_submit {
+        background: $saffron-color;
+        color: white;
+        padding: 14px 40px;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 16px;
+        transition: all 0.3s;
+        border: none;
+        cursor: pointer;
+
+        &:hover {
+          background: darken($saffron-color, 5%);
+          transform: translateY(-1px);
+        }
+        
+        &:disabled {
+          opacity: 0.7;
+          cursor: not-allowed;
+        }
+      }
+    }
+  }
+}

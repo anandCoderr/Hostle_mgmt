@@ -1,0 +1,83 @@
+/* Cropper-modal additions for RHFImgUploadWithCropper.
+ * The dropzone + preview styles are reused from RHFImgUpload.scss; this file
+ * only adds the crop button on previews and the modal/cropper chrome. */
+
+/* Small crop affordance on each committed preview thumbnail. */
+.rhf_img_upload .rhf_preview_item .rhf_preview_crop {
+  position: absolute;
+  top: -8px;
+  left: -8px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: none;
+  background-color: #ffffff;
+  color: #e15982;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(225, 89, 130, 0.35);
+  transition: transform 0.15s ease;
+
+  &:hover {
+    transform: scale(1.1);
+  }
+}
+
+.rhf_cropper_modal {
+  .modal-body {
+    padding: 20px;
+  }
+
+  .rhf_cropper_header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  .rhf_cropper_title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #2f3334;
+    margin: 0;
+  }
+
+  .rhf_cropper_progress {
+    font-size: 12px;
+    font-weight: 600;
+    color: #e15982;
+    background-color: #e94b8412;
+    padding: 4px 10px;
+    border-radius: 999px;
+    white-space: nowrap;
+  }
+
+  .rhf_cropper_stage {
+    width: 100%;
+    background-color: #f7f7f8;
+    border-radius: 8px;
+    overflow: hidden;
+
+    /* react-cropper renders an inner wrapper; keep the media block tidy. */
+    .cropper-container {
+      width: 100% !important;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+    }
+  }
+
+  .rhf_cropper_actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 18px;
+  }
+}

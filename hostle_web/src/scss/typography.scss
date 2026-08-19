@@ -47,12 +47,18 @@ body {
   }
 }
 
-.container {
+%container {
   // max-width: 1400px;
   max-width: 98%;
   width: 100%;
+  min-height: 100%;
+  height: 100%;
+
   margin: 0 auto;
   padding: 0 20px;
+}
+.container {
+  @extend %container;
 }
 
 .wrap_overview {
@@ -486,4 +492,12 @@ p {
   display: flex;
   justify-content: flex-end;
   align-items: center;
+}
+
+// -----------------bg soft grey
+.bg_soft_grey {
+  background-color: #f1f2f4;
+  border-radius: 12px;
+  padding: 20px;
+  @extend %container;
 }

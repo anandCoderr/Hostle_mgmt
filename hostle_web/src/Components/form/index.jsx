@@ -1,6 +1,6 @@
 "use client";
 import { FaRegStar, FaStar, FaStarHalf } from "react-icons/fa";
-import { forwardRef, useEffect, useState } from "react";
+import { forwardRef, useEffect, useState, useId } from "react";
 import { LuCalendarDays } from "react-icons/lu";
 import ReactDatePicker from "react-datepicker";
 import MultiSelect from "react-select";
@@ -537,6 +537,8 @@ export const CommonSelect = ({
     );
   };
 
+  const selectId = useId();
+
   const handleChange = (selectedOptions) => {
     onChange(selectedOptions);
   };
@@ -546,6 +548,7 @@ export const CommonSelect = ({
       {required && <span className="text-danger"> *</span>}
 
       <MultiSelect
+        instanceId={selectId}
         onChange={handleChange}
         value={value}
         className={`form-control multi-select ${className} ${
