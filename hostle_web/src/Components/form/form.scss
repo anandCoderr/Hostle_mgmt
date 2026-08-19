@@ -307,6 +307,51 @@ label.label {
   }
 }
 
+// The form components below mark up their asterisk, hint and error text with
+// Bootstrap's class names, but this project loads only react-bootstrap's
+// components — never its stylesheet. Define them here so the markup renders
+// as intended instead of falling back to unstyled black text.
+.required,
+.text-danger {
+  color: $red-color;
+}
+
+.label {
+  .required {
+    margin-inline-start: 2px;
+  }
+
+  .optional {
+    margin-inline-start: 4px;
+    font-style: normal;
+    font-weight: 400;
+    color: $text-light;
+  }
+
+  .subText {
+    margin-inline-start: 4px;
+    font-weight: 400;
+    color: $text-light;
+  }
+}
+
+.invalid-feedback,
+.info-feedback {
+  display: block;
+  width: 100%;
+  margin: 6px 0 0 4px;
+  font-size: 0.8125rem;
+  line-height: 1.3;
+}
+
+.invalid-feedback {
+  color: $red-color;
+}
+
+.info-feedback {
+  color: $text-light;
+}
+
 .button_wrap {
   display: flex;
   align-items: center;
@@ -895,27 +940,33 @@ button:disabled {
 }
 
 .multi-select {
-  min-height: 40px;
-  border-radius: 6px;
+  // react-select's own control border is stripped further down, and the
+  // `.form-control` class the markup also carries comes from Bootstrap, whose
+  // CSS this project never loads. So the box is drawn here instead — kept in
+  // sync with `.input` above so selects and text inputs line up.
+  width: 100%;
+  min-height: 60px;
+  padding: 5px 15px;
+  background-color: $white-color;
+  border: 1px solid #0000001f;
+  border-radius: 10px;
+  color: #0f172a;
+  font-weight: 400;
+  transition: all 0.3s linear;
   display: flex;
   align-items: center;
   position: relative;
 
-  @include break-point(largeDesktop) {
-    min-height: 40px;
-    border-radius: 6px;
+  @include break-point(tablet) {
+    padding: 5px 10px;
   }
 
-  &:after {
-    content: "";
-    position: absolute;
-    // background-image: url("../../assets/icons/selectDropdown.png");
-    right: 0;
-    width: 24px;
-    height: 15px;
-    background-repeat: no-repeat;
-    background-size: 10px;
-    background-position: right 0.75rem center;
+  @include break-point(mobile) {
+    font-size: 12px;
+  }
+
+  &:focus-within {
+    box-shadow: 0 0 0 4px #233d290d;
   }
 
   .css-13cymwt-control {
@@ -985,8 +1036,25 @@ button:disabled {
     }
   }
 
+  // Keep the dropdown arrow — without an indicator the control reads as plain
+  // text. Only the separator bar is dropped.
   .react_select__indicators {
-    display: none;
+    align-self: center;
+
+    .react_select__indicator-separator {
+      display: none;
+    }
+
+    .react_select__dropdown-indicator {
+      display: flex;
+      padding: 0;
+      color: #64748b;
+      transition: color 0.2s linear;
+
+      &:hover {
+        color: #0f172a;
+      }
+    }
   }
 
   .css-1nmdiq5-menu {
@@ -1012,18 +1080,36 @@ button:disabled {
     }
   }
 
-  &.is-invalid {
-    &:after {
-      right: 15px;
-    }
+  // Stable, prefix-based menu styling. The `css-*` rules above are keyed to
+  // hashed emotion class names that change between react-select releases;
+  // these use the `classNamePrefix="react_select"` names instead.
+  .react_select__menu {
+    left: 0;
+    margin: 4px 0 0;
+    border: 1px solid #0000001f;
+    border-radius: 10px;
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+    overflow: hidden;
+    z-index: 1000;
   }
 
-  .react_select__option--is-selected {
-    background-color: $orange-color;
+  .react_select__menu-list {
+    padding: 4px;
+  }
+
+  .react_select__option {
+    border-radius: 6px;
+  }
+
+  &.is-invalid {
+    border-color: $red-color;
+    box-shadow: none;
   }
 
   &.react_select--is-disabled {
     background-color: hsl(0, 0%, 95%);
+    opacity: 0.5;
+    cursor: not-allowed;
   }
 }
 

@@ -7,6 +7,10 @@ import MultiSelect from "react-select";
 import { components } from "react-select";
 import { Form } from "react-bootstrap";
 import { CiSearch } from "react-icons/ci";
+// Base stylesheet for <ReactDatePicker/>. Without it the calendar has no
+// layout at all (day names and dates stack in a single column). Must come
+// BEFORE form.scss, which only carries overrides on top of it.
+import "react-datepicker/dist/react-datepicker.css";
 import "./form.scss";
 import Image from "next/image";
 import { calendaricon } from "@/assets/icons";
@@ -510,15 +514,16 @@ export const CommonSelect = ({
   const customStyles = {
     option: (provided, state) => ({
       ...provided,
-      background: state.isSelected
-        ? "linear-gradient(180deg, #f17f1f 0%, #f17f1f 100%)"
-        : "#fff", // Change background color of selected option
-      color: state.isSelected
-        ? "linear-gradient(180deg, #f17f1f 0%, #f17f1f 100%)"
-        : "black", // Change text color of selected option
+      cursor: "pointer",
+      background: state.isSelected ? "#f17f1f" : "#fff",
+      color: state.isSelected ? "#fff" : "#0f172a",
+      "&:active": {
+        background: "#f17f1f",
+        color: "#fff",
+      },
       "&:hover": {
-        background: "linear-gradient(180deg, #f17f1f 0%, #f17f1f 100%)", // Change background color of option on hover
-        color: "#fff", // Change text color of option on hover
+        background: state.isSelected ? "#f17f1f" : "rgba(241, 127, 31, 0.12)",
+        color: state.isSelected ? "#fff" : "#0f172a",
       },
     }),
     loadingIndicator: (base, state) => ({
@@ -544,8 +549,12 @@ export const CommonSelect = ({
   };
   return (
     <div>
-      {label && <label className="label">{label}</label>}
-      {required && <span className="text-danger"> *</span>}
+      {label && (
+        <label className="label">
+          {label}
+          {required && <span className="required mx-1"> *</span>}
+        </label>
+      )}
 
       <MultiSelect
         instanceId={selectId}

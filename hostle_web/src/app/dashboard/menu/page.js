@@ -1,5 +1,5 @@
-import { Button } from "@/Components/form";
 import React from "react";
+import AddButton from "./Component/AddButton";
 
 const products = () => {
   return (
@@ -9,7 +9,7 @@ const products = () => {
       </section>
 
       <div className="wrapper_search move_right">
-        <Button type="button">Add</Button>
+        <AddButton />
       </div>
     </div>
   );

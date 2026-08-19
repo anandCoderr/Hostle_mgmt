@@ -10,6 +10,7 @@ import RHFCloudinaryUpload from "@/Components/RHFHelperComponent/RHFImages/RHFCl
 import { FiPlus, FiTrash2 } from "react-icons/fi";
 import "./AddMenu.scss";
 import { toastMessage } from "@/utils/toastMessage";
+import MealSection from "../Component/MealSection";
 
 const weekDays = [
   { label: "Monday", value: "MONDAY" },
@@ -20,83 +21,6 @@ const weekDays = [
   { label: "Saturday", value: "SATURDAY" },
   { label: "Sunday", value: "SUNDAY" },
 ];
-
-const MealSection = ({ mealType, control, register, errors }) => {
-  const { fields, append, remove } = useFieldArray({
-    control,
-    name: `${mealType}.foods`,
-  });
-
-  return (
-    <div className="meal_section">
-      <div className="meal_header">
-        <h4>{mealType}</h4>
-      </div>
-      <div className="meal_body">
-        <div className="form_row">
-          <div className="field_group">
-            <TextArea
-              label="Description (Optional)"
-              placeholder={`Describe the ${mealType} meal...`}
-              {...register(`${mealType}.description`)}
-              error={errors?.[mealType]?.description?.message}
-            />
-          </div>
-        </div>
-
-        {fields.length > 0 && (
-          <div className="foods_list">
-            {fields.map((field, index) => (
-              <div key={field.id} className="food_item">
-                <button
-                  type="button"
-                  className="btn_remove_food"
-                  onClick={() => remove(index)}
-                  title="Remove Food"
-                >
-                  <FiTrash2 />
-                </button>
-                <div className="form_row">
-                  <div className="field_group">
-                    <Input
-                      label={`Food Name ${index + 1}`}
-                      placeholder="e.g. Daal Makhani"
-                      {...register(`${mealType}.foods.${index}.name`)}
-                      error={errors?.[mealType]?.foods?.[index]?.name?.message}
-                      required
-                    />
-                  </div>
-                </div>
-                <div className="form_row">
-                  <div className="field_group">
-                    <label className="label">Food Images <span className="text-danger">*</span></label>
-                    <RHFCloudinaryUpload
-                      name={`${mealType}.foods.${index}.images`}
-                      control={control}
-                      multiple={true}
-                      maxFiles={3}
-                    />
-                    {errors?.[mealType]?.foods?.[index]?.images?.message && (
-                      <span className="error_text">{errors?.[mealType]?.foods?.[index]?.images?.message}</span>
-                    )}
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-
-        <button
-          type="button"
-          className="btn_add_food"
-          onClick={() => append({ name: "", images: [] })}
-        >
-          <FiPlus /> Add {mealType} Food
-        </button>
-      </div>
-    </div>
-  );
-};
 
 const AddMenuPage = () => {
   const [activeTab, setActiveTab] = useState("WEEKLY");
@@ -124,7 +48,7 @@ const AddMenuPage = () => {
   const handleTabChange = (tab) => {
     setActiveTab(tab);
     setValue("type", tab, { shouldValidate: true });
-    
+
     // Clear the specific fields when switching tabs
     if (tab === "WEEKLY") {
       setValue("date", undefined);
@@ -173,7 +97,9 @@ const AddMenuPage = () => {
                     <CommonSelect
                       label="Day"
                       options={weekDays}
-                      value={weekDays.find((d) => d.value === field.value) || null}
+                      value={
+                        weekDays.find((d) => d.value === field.value) || null
+                      }
                       onChange={(selected) => field.onChange(selected?.value)}
                       error={errors?.day?.message}
                       placeholder="Select Day"
@@ -217,12 +143,31 @@ const AddMenuPage = () => {
           </div>
 
           {/* Meals Sections */}
-          <MealSection mealType="breakfast" control={control} register={register} errors={errors} />
-          <MealSection mealType="lunch" control={control} register={register} errors={errors} />
-          <MealSection mealType="dinner" control={control} register={register} errors={errors} />
+          <MealSection
+            mealType="breakfast"
+            control={control}
+            register={register}
+            errors={errors}
+          />
+          <MealSection
+            mealType="lunch"
+            control={control}
+            register={register}
+            errors={errors}
+          />
+          <MealSection
+            mealType="dinner"
+            control={control}
+            register={register}
+            errors={errors}
+          />
 
           <div className="form_actions">
-            <button type="submit" className="btn_submit" disabled={isSubmitting}>
+            <button
+              type="submit"
+              className="btn_submit"
+              disabled={isSubmitting}
+            >
               {isSubmitting ? "Submitting..." : "Submit Menu"}
             </button>
           </div>
