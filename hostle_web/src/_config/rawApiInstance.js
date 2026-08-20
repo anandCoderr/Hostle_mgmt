@@ -1,6 +1,7 @@
+// USE WHEN: client-side, logged-in user — same as apiInstance, but sends params/FormData exactly as given.
+
 // import { logger } from "@/utils/logger";
 import { getToken, removeToken } from "./apiInstance";
-import { decryptData } from "./encryption";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
@@ -25,15 +26,6 @@ const joinUrl = (path) =>
   /^https?:\/\//.test(path)
     ? path
     : `${BASE_URL}${path.startsWith("/") ? "" : "/"}${path}`;
-
-// Server still returns responses wrapped in an encrypted `payload` field even
-// when the request body is plain — unwrap it here so callers always see JSON.
-const decryptResponse = (json) => {
-  if (!json) return json;
-  if (typeof json?.payload !== "string") return json;
-  const decrypted = decryptData(json.payload);
-  return decrypted?.response ?? decrypted ?? json;
-};
 
 async function request(
   method,
@@ -77,15 +69,14 @@ async function request(
     throw err;
   }
 
-  let payload = null;
+  let final = null;
   try {
-    payload = await res.json();
+    final = await res.json();
   } catch {
     // no/empty body
   }
 
-  const final = decryptResponse(payload);
-  // logger.log("raw api decrypted response:--->", final);
+  // logger.log("raw api response:--->", final);
   const apiStatus = final?.status ?? res.status;
 
   if (isAuthFailure(apiStatus)) {

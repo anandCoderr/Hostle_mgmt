@@ -1,5 +1,7 @@
+// USE WHEN: client-side, no login needed — no JWT sent; JSON only, and empty/null query params are dropped.
+
 // import { logger } from "@/utils/logger";
-import { decryptData } from "./encryption";
+import { buildQuery } from "./queryString";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
@@ -19,22 +21,6 @@ const joinUrl = (path) =>
   /^https?:\/\//.test(path)
     ? path
     : `${BASE_URL}${path.startsWith("/") ? "" : "/"}${path}`;
-
-const decryptResponse = (json) => {
-  if (!json) return json;
-  if (typeof json?.payload !== "string") return json;
-  const decrypted = decryptData(json.payload);
-  return decrypted?.response ?? decrypted ?? json;
-};
-
-const buildQuery = (params) => {
-  if (!params || !Object.keys(params).length) return "";
-  const cleaned = Object.entries(params).filter(
-    ([, v]) => v !== "" && v !== undefined && v !== null,
-  );
-  if (!cleaned.length) return "";
-  return new URLSearchParams(Object.fromEntries(cleaned)).toString();
-};
 
 async function request(
   method,
@@ -73,15 +59,14 @@ async function request(
     throw err;
   }
 
-  let payload = null;
+  let final = null;
   try {
-    payload = await res.json();
+    final = await res.json();
   } catch {
     // no/empty body
   }
 
-  const final = decryptResponse(payload);
-  // logger.log("public raw api decrypted response:--->", final);
+  // logger.log("public raw api response:--->", final);
   const apiStatus = final?.status ?? res.status;
 
   if (!res.ok || Number(apiStatus) >= 400) {

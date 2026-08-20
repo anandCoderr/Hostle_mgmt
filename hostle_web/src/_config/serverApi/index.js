@@ -1,13 +1,17 @@
+// USE WHEN: importing any server-side client — these fail the build if pulled into a client component.
+
 // Barrel for the SERVER-side API instances.
 // Use these from Server Components, Server Actions, and Route Handlers ONLY.
 // Each underlying file declares `import "server-only"` — the build will fail
 // loudly if any of these get pulled into a client bundle.
 //
 // Mapping to the client-side counterparts in /src/_config/:
-//   serverApi        ↔  apiInstance.js        (encrypted envelope both ways)
-//   serverRawApi     ↔  rawApiInstance.js     (plain request, decrypted response)
-//   serverPublicApi  ↔  publicApiInstance.js  (no auth, no encryption)
-//   serverPublicRawApi                       (no auth, decrypted response)
+//   serverApi           ↔  apiInstance.js        (authenticated)
+//   serverRawApi        ↔  rawApiInstance.js     (authenticated)
+//   serverPublicApi     ↔  publicApiInstance.js  (no auth)
+//   serverPublicRawApi  ↔  publicRawApiInstance.js (no auth)
+//
+// All of them send and receive plain JSON.
 //
 // Import example:
 //   import { serverRawApi } from "@/_config/serverApi";

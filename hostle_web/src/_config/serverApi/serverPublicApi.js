@@ -1,11 +1,13 @@
+// USE WHEN: server-side (RSC / Server Action / Route Handler), no login — no JWT; accepts JSON or plain-text responses.
+
 import "server-only";
 // import { logger } from "@/utils/logger";
 
 // SERVER-SIDE mirror of /src/_config/publicApiInstance.js
 //
-// Use this for endpoints that need NO auth token and NO encryption envelope
-// (CMS content, static lookups, etc.) when calling from a Server Component,
-// Server Action, or Route Handler.
+// Use this for endpoints that need NO auth token (CMS content, static
+// lookups, etc.) when calling from a Server Component, Server Action, or
+// Route Handler.
 //
 // Behavior matches publicApiInstance.js: plain params in, plain JSON out.
 // Throws on error so calling code can try/catch (same shape as client).

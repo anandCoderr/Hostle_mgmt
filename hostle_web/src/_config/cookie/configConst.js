@@ -1,3 +1,5 @@
+// USE WHEN: you need a cookie NAME or max-age — single source of truth for every cookie key.
+
 export const authCookie = {
   token: "noorlam_seller_auth_token",
   userProfileToken: "userProfileTokenInfo",

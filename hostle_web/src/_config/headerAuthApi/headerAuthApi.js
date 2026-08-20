@@ -1,7 +1,8 @@
+// USE WHEN: client-side, logged-in user, but a 401 must NOT log the user out (only 403/419 do).
+
 import Cookies from "js-cookie";
-import { decryptData, encryptData, queryStringToJSON } from "../encryption";
+import { buildQuery, queryStringToJSON } from "../queryString";
 // import { logger } from "@/utils/logger";
-import { apiVariables } from "../cookie/configConst";
 import { TOKEN_KEYS, removeToken } from "../apiInstance";
 
 // =============================================================================
@@ -9,22 +10,14 @@ import { TOKEN_KEYS, removeToken } from "../apiInstance";
 // use class-validator with `forbidNonWhitelisted: true` and read the JWT
 // ONLY from the `Authorization` header.
 //
-// Same as apiInstance.js:
-//   - Request body / GET query are wrapped in the encrypted `payload` envelope
-//   - Response `payload` field is decrypted before returning to the caller
-//   - 401/403/419 trigger removeToken() + onAuthError() (mirrors apiInstance)
-//
-// Different from apiInstance.js:
-//   - The token is NOT injected into the encrypted payload. It only goes on
-//     the Authorization header. This avoids the
-//     "property token should not exist" 400 from strict DTOs.
-//
-// Wire endpoints to this client when you see that error from the backend,
-// e.g. /user/support, /user/profile/change-password.
+// Now that the encrypted envelope is gone, this behaves the same as
+// apiInstance.js: plain JSON in, plain JSON out, token on the Authorization
+// header only. It is kept as a separate export so existing call sites keep
+// working — the one remaining difference is that it does NOT treat 401 as an
+// auth failure (see isAuthFailure below).
 // =============================================================================
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
-const apiName = apiVariables.apiName;
 
 let handlers = {
   onAuthError: () => {
@@ -48,13 +41,6 @@ const joinUrl = (path) =>
   /^https?:\/\//.test(path)
     ? path
     : `${BASE_URL}${path.startsWith("/") ? "" : "/"}${path}`;
-
-const decryptResponse = (json) => {
-  if (!json) return json;
-  if (typeof json?.payload !== "string") return json;
-  const decrypted = decryptData(json.payload);
-  return decrypted?.response ?? decrypted ?? json;
-};
 
 const getToken = () => Cookies.get(TOKEN_KEYS.token) || null;
 
@@ -80,37 +66,31 @@ async function request(
   const reqHeaders = { Accept: "application/json", ...headers };
   if (token) reqHeaders.Authorization = `Bearer ${token}`;
 
-  // GET and param-only DELETE put the encrypted envelope on the query string.
-  // A DELETE that passes `data` (e.g. DELETE /user/profile with { reason })
-  // falls through to the body branch below and sends the envelope in the body.
+  // GET and param-only DELETE send plain query params. A DELETE that passes
+  // `data` (e.g. DELETE /user/profile with { reason }) falls through to the
+  // body branch below.
   if (m === "GET" || (m === "DELETE" && !data)) {
-    const merged = {
+    const qs = buildQuery({
       ...queryStringToJSON(existingQs),
       ...(params || {}),
-    };
-    const encrypted = encryptData(merged);
-    url += `?${new URLSearchParams({ [apiName]: encrypted }).toString()}`;
+    });
+    if (qs) url += `?${qs}`;
   } else {
     if (existingQs) url += `?${existingQs}`;
 
     if (multipart || data instanceof FormData) {
-      const fd = new FormData();
-      const textObj = {};
       if (data instanceof FormData) {
-        for (const [k, v] of data.entries()) {
-          if (v instanceof File || v instanceof Blob) fd.append(k, v);
-          else textObj[k] = v;
-        }
-      } else if (data && typeof data === "object") {
-        Object.assign(textObj, data);
+        body = data;
+      } else {
+        const fd = new FormData();
+        Object.entries(data || {}).forEach(([k, v]) => {
+          if (v !== undefined && v !== null) fd.append(k, v);
+        });
+        body = fd;
       }
-      fd.append(apiName, encryptData(textObj));
-      body = fd;
     } else {
       reqHeaders["Content-Type"] = "application/json";
-      body = JSON.stringify({
-        [apiName]: encryptData(data || {}),
-      });
+      body = JSON.stringify(data || {});
       // logger.log("[HEADER AUTH API] body:------->", body);
     }
   }
@@ -131,16 +111,14 @@ async function request(
     throw err;
   }
 
-  let payload = null;
+  let final = null;
   try {
-    payload = await res.json();
+    final = await res.json();
   } catch {
     // no/empty body
   }
 
-  const final = decryptResponse(payload);
-
-  // logger.log("final decryptResponse:------->", final);
+  // logger.log("final response:------->", final);
   const apiStatus = final?.status ?? res.status;
 
   // return;

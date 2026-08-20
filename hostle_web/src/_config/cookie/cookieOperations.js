@@ -1,7 +1,9 @@
 "use server";
+
+// USE WHEN: set/read/delete httpOnly cookies from the server — the browser cannot read these.
+
 import { cookies } from "next/headers";
 import { authCookie, cookieMaxAge } from "./configConst";
-import { decryptData, encryptData } from "../encryption";
 import { logger } from "@/utils/logger";
 
 const COOKIE_OPTIONS = {
@@ -34,13 +36,15 @@ export const setNonEncryptedCookies = async (
 };
 
 // ----------------------set cookie
+// Identical to setNonEncryptedCookies now that encryption is gone. Both names
+// are kept so existing call sites keep working.
 
 export const setCookies = async (
   name = authCookie?.token,
   value,
   options = {},
 ) => {
-  (await cookies()).set(name, encryptData(toJsonStringify(value)), {
+  (await cookies()).set(name, toJsonStringify(value), {
     ...COOKIE_OPTIONS,
     ...options,
   });
@@ -58,6 +62,8 @@ export const getNonEncryptedCookies = async (name = authCookie?.token) => {
 };
 
 // ------------------it returns selected cookie value
+// Returns the PARSED value (getNonEncryptedCookies returns the raw string) —
+// same contract the decrypting version had, so callers are unaffected.
 
 export const getCookies = async (name = authCookie?.token) => {
   const cookie = (await cookies()).get(name);
@@ -65,7 +71,11 @@ export const getCookies = async (name = authCookie?.token) => {
   // get('name')	- Object - It Accepts a cookie name and returns an object with the name and value.
 
   if (!cookie) return null;
-  return decryptData(cookie.value);
+  try {
+    return toJsonParse(cookie.value);
+  } catch {
+    return cookie.value;
+  }
 };
 
 // ------------------ remove single cookie

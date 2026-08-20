@@ -1,3 +1,5 @@
+// USE WHEN: client-side, no login needed — no JWT sent; accepts JSON or plain-text responses.
+
 // import { logger } from "@/utils/logger";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;

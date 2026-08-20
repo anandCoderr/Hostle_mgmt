@@ -1,15 +1,14 @@
+// USE WHEN: server-side (RSC / Server Action / Route Handler), logged in — like serverApi, params/FormData sent as given.
+
 import "server-only";
-import { cookies } from "next/headers";
-import { decryptData } from "@/_config/encryption";
+import { buildQuery } from "@/_config/queryString";
 import { getCookies } from "../cookie/cookieOperations";
 // import { logger } from "@/utils/logger";
 
 // SERVER-SIDE mirror of /src/_config/rawApiInstance.js
 //
-// Use this for endpoints that expect PLAIN query params / JSON body but
-// return the encrypted `payload` envelope in the response (e.g. NestJS
-// controllers with class-validator forbidNonWhitelisted that decrypt the
-// response in a global interceptor). /user/consultants is one of these.
+// Use this for authenticated calls from a Server Component / Server Action:
+// plain query params or JSON body in, plain JSON out.
 //
 // Token source:
 //   js-cookie can't read cookies on the server. We read the request's
@@ -43,26 +42,6 @@ const joinUrl = (path) =>
   /^https?:\/\//.test(path)
     ? path
     : `${BASE_URL}${path.startsWith("/") ? "" : "/"}${path}`;
-
-// Same shape as rawApiInstance.js: server still wraps responses in an
-// encrypted `payload` field, so unwrap before returning to the caller.
-const decryptResponse = (json) => {
-  if (!json) return json;
-  if (typeof json?.payload !== "string") return json;
-  const decrypted = decryptData(json.payload);
-  return decrypted?.response ?? decrypted ?? json;
-};
-
-// URLSearchParams turns undefined/null into the strings "undefined"/"null".
-// Strip those plus empty strings — most NestJS DTOs reject them anyway.
-const buildQuery = (params) => {
-  if (!params || !Object.keys(params).length) return "";
-  const cleaned = Object.entries(params).filter(
-    ([, v]) => v !== "" && v !== undefined && v !== null,
-  );
-  if (!cleaned.length) return "";
-  return new URLSearchParams(Object.fromEntries(cleaned)).toString();
-};
 
 async function request(
   method,
@@ -104,15 +83,14 @@ async function request(
     throw err;
   }
 
-  let payload = null;
+  let final = null;
   try {
-    payload = await res.json();
+    final = await res.json();
   } catch {
     // no/empty body
   }
 
-  const final = decryptResponse(payload);
-  // logger.log("server raw api decrypted response:--->", final);
+  // logger.log("server raw api response:--->", final);
   const apiStatus = final?.status ?? res.status;
 
   if (isAuthFailure(apiStatus)) {
