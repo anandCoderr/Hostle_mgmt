@@ -1,14 +1,20 @@
-import { Input, TextArea } from "@/Components/form";
+import { TextArea } from "@/Components/form";
 import RHFCloudinaryUpload from "@/Components/RHFHelperComponent/RHFImages/RHFCloudinaryUpload";
+import RHFInput from "@/Components/RHFHelperComponent/RHFInput/RHFInput";
+import { logger } from "@/utils/logger";
 import React from "react";
 import { useFieldArray } from "react-hook-form";
 import { FiPlus, FiTrash2 } from "react-icons/fi";
 
 const MealSection = ({ mealType, control, register, errors }) => {
+  // "use no memo";
   const { fields, append, remove } = useFieldArray({
     control,
     name: `${mealType}.foods`,
   });
+
+  // logger.log("MealSection Rendered:----->", fields);
+  console.log("MealSection Rendered:----->", fields);
 
   return (
     <div className="meal_section">
@@ -41,11 +47,11 @@ const MealSection = ({ mealType, control, register, errors }) => {
                 </button>
                 <div className="form_row">
                   <div className="field_group">
-                    <Input
+                    <RHFInput
+                      name={`${mealType}.foods.${index}.name`}
+                      control={control}
                       label={`Food Name ${index + 1}`}
                       placeholder="e.g. Daal Makhani"
-                      {...register(`${mealType}.foods.${index}.name`)}
-                      error={errors?.[mealType]?.foods?.[index]?.name?.message}
                       required
                     />
                   </div>

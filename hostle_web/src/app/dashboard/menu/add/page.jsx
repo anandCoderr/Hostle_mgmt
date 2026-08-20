@@ -4,13 +4,15 @@ import React, { useEffect, useState } from "react";
 import { useForm, Controller, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { addMenuRule } from "@/utils/SchemaValidations/commonSchema/_commonSchema";
-import { Input, TextArea, CommonSelect } from "@/Components/form";
+import { TextArea, CommonSelect } from "@/Components/form";
+import RHFInput from "@/Components/RHFHelperComponent/RHFInput/RHFInput";
 import RhfDatePicker from "@/Components/RHFHelperComponent/RHFDatePicker/RhfDatePicker";
 import RHFCloudinaryUpload from "@/Components/RHFHelperComponent/RHFImages/RHFCloudinaryUpload";
 import { FiPlus, FiTrash2 } from "react-icons/fi";
 import "./AddMenu.scss";
 import { toastMessage } from "@/utils/toastMessage";
 import MealSection from "../Component/MealSection";
+import { bootstrapLoaderHelperFun } from "@/Components/bootstrapLoader";
 
 const weekDays = [
   { label: "Monday", value: "MONDAY" },
@@ -30,8 +32,7 @@ const AddMenuPage = () => {
     handleSubmit,
     control,
     setValue,
-    watch,
-    formState: { errors, isSubmitting },
+    formState: { errors, isSubmitting, isDirty, isValid },
   } = useForm({
     resolver: zodResolver(addMenuRule),
     defaultValues: {
@@ -44,6 +45,9 @@ const AddMenuPage = () => {
       dinner: { description: "", foods: [] },
     },
   });
+
+  // -----------------------------to disable and enable button
+  const isSubmitEnabled = isDirty && isValid;
 
   const handleTabChange = (tab) => {
     setActiveTab(tab);
@@ -121,11 +125,11 @@ const AddMenuPage = () => {
             )}
 
             <div className="field_group">
-              <Input
+              <RHFInput
+                name="title"
+                control={control}
                 label="Menu Title"
                 placeholder="e.g. Sunday Special"
-                {...register("title")}
-                error={errors?.title?.message}
                 required
               />
             </div>
@@ -166,9 +170,10 @@ const AddMenuPage = () => {
             <button
               type="submit"
               className="btn_submit"
-              disabled={isSubmitting}
+              disabled={!isSubmitEnabled || isSubmitting}
             >
               {isSubmitting ? "Submitting..." : "Submit Menu"}
+              {isSubmitting && bootstrapLoaderHelperFun()}
             </button>
           </div>
         </form>
